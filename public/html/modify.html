@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="../css/modify.css">
+    <title>loginPage</title>
+</head>
+<body>
+    <section class = "wrap">
+        <article class="container">
+            <button id="back-button"><</button>
+            <description class="name">아무 말 대잔치</description>
+            <img id="profile-image" class="image" src="../images/profile_img.webp"/>
+        </article>
+        <p class="signup-header">게시글 수정</p>
+        <form id = "post-modify-form" class="container-signup">
+            <description class="name">제목*</description>
+            <hr class="line"/>
+            <input type="text" class= "name" id="title-textbox" name="textbox">
+            <hr class="line"/>
+            <description class="name">내용*</description>
+            <hr class="line"/>
+            <textarea class= "name" id="body-textbox" name="textbox"></textarea>
+            <hr class="line"/>
+            <description id="helper-text">* helper text</description>
+            <description class="name">이미지</description>
+            <div id="rowcon">
+                <a class="button-round" href="https://github.com" target="_blank">파일 선택</a>
+                <description class="text">기존 파일 명</description>
+            </div>
+            <button type="submit" id="post-modify-button" class="button">수정하기</button>
+        </form>
+    </section>
+    <div id="userinfo-modalContainer" class="hidden">
+        <button id="modify-userinfo-button" class="modal-userinfo-button">회원번호수정</button>
+        <button id="modify-password-button" class="modal-userinfo-button">비밀번호수정</button>
+        <button id="logout-button" class="modal-userinfo-button">로그아웃</button>
+    </div>
+    <script src="../js/modify.js"></script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap");
+
+body {
+    display: flex;
+    justify-content: center;
+    background-color: #f4f5f7;
+    font-family: "Noto Sans KR", sans-serif;
+}
+
+.wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+/* userinfo-modal */
+#userinfo-modalContainer {
+    position: absolute;
+    width: 115px;
+    height: 105px;
+    top: 88px;
+    left: 408px;
+}
+    
+#userinfo-modalContainer.hidden {
+    display: none;
+}
+
+.modal-userinfo-button {
+    width:100%;
+    height: 35px;
+    border: 0px;
+    background-color: #d9d9d9;
+}
+
+.container {
+    width: 1920px;
+    height: 104px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Sandoll GogoRound", sans-serif;
+    border-bottom: 1px solid #000;
+}
+
+.container .name {
+    margin: 36px;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 32px;
+    color: #000;
+}
+
+.container .image {
+    width: 36px;
+    height: 36px;
+    margin-left: 20px;
+    border-radius: 50%;
+}
+
+.signup-header {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 38.19px;
+    margin-top: 264px;
+    margin-bottom: 10px;
+    font-family: "Pretendard", sans-serif;
+}
+
+.container-signup {
+    position: relative;
+    width: 392px;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    font-family: "Pretendard", sans-serif;
+    border: 1px solid #f4f5f7;
+    border-radius: 10px;
+}
+
+.container-signup .name {
+    margin: 10px;
+    margin-left: 4px;
+    color: #000;
+    font-family: "Pretendard", sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 17.9px;
+}
+
+#mail-address {
+    margin: 10px;
+    margin-left: 4px;
+    color: #000;
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16.71px;
+}
+
+.container-signup .image {
+    width: 149px;
+    height: 149px;
+    border-radius: 50%;
+    margin-left: 30%; 
+}
+
+#helper-text {
+        margin: 10px;
+        margin-left: 4px;
+        color: #ff0000;
+        font-family: "Pretendard", sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 14.52px;
+    
+}
+
+#nickname-textbox {
+    width: 355px;
+    height: 33px;
+
+    background-color: #f4f5f7;
+
+    border: 1px solid #000;
+    border-radius: 4px;
+    
+}
+ 
+.button-box {
+    width: 355px;
+    height: 33px;
+    margin: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    background-color: #7f6aee;
+    border-radius: 4px;
+  
+    text-decoration: none;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    /* figma에 16.71px로 나와 있지만 로그인 텍스트의 가로 중앙 정렬을 위해 임의로 수정 */
+    line-height: 30px;
+}
+ 
+.button-text {
+    height: 17px;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    margin-right: 45px;
+    text-decoration: none;
+    color: #000;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16.71px;
+}
+
+.signup {
+    margin-top: 12px;
+    margin-right: 35px;
+    color: #000;
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16.71px;
+}
+
+
+/* delete-modal */
+.modal-accept-button, .modal-cancle-button {
+    width: 127px;
+    height: 44px;
+    border-radius: 12px;
+    opacity: 0px;
+    margin: 5px;
+
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 23.87px;
+    cursor: pointer;
+}
+
+.modal-cancle-button {
+    background-color: #242424;
+    color: #ffffff;
+}
+  
+.modal-accept-button {
+    background-color: #c4a5fa;
+}
+
+#modalContainer, #comment-modalContainer {
+top: 400px;
+width: 408px;
+left: 50%;
+transform: translateX(-50%);
+height: 242px;
+position: fixed;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+background-color: #ffffff;
+border-radius: 12px;
+font-weight: 700;
+font-size: 24px;
+line-height: 28.64px;
+}
+
+#temp-text {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 23.87px;
+    }
+    
+#buttonContent {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #ffffff;
+    width: 300px;
+    height: 45px;
+}
+    
+#modalContainer.hidden {
+    display: none;
+}
+
+/* toast-container */
+#toast-container {
+    width: 102px;
+    height: 46px;
+    position: fixed;
+    bottom: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #aca0eb;
+    color: #fff;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 400;
+    font-size: 18px;
+    visibility: hidden;
+}

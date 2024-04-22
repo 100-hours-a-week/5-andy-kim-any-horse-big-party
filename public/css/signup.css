@@ -1,0 +1,140 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap");
+
+body {
+    display: flex;
+    justify-content: center;
+    background-color: #f4f5f7;
+    font-family: "Noto Sans KR", sans-serif;
+}
+
+.wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.container {
+    width: 1920px;
+    height: 104px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Sandoll GogoRound", sans-serif;
+    border-bottom: 1px solid #000;
+}
+
+#back-button {
+    background-color: #f4f5f7;
+    color: #000;
+    font-family: "Pretendard", sans-serif;
+    border: 0px #f4f5f7;
+    font-size: 32px;
+    font-weight: 300;
+    cursor: pointer;
+}
+
+.container .name {
+    margin: 36px;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 32px;
+    color: #000;
+}
+
+.container .image {
+    width: 36px;
+    height: 36px;
+    margin-left: 20px;
+    border-radius: 50%;
+}
+
+.signup-header {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 38.19px;
+    margin-top: 264px;
+    margin-bottom: 10px;
+    font-family: "Pretendard", sans-serif;
+}
+
+#signup-form {
+    position: relative;
+    width: 392px;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    font-family: "Pretendard", sans-serif;
+    border: 1px solid #f4f5f7;
+    border-radius: 10px;
+}
+
+.container-signup .name {
+    margin: 10px;
+    margin-left: 4px;
+    color: #000;
+    font-family: "Pretendard", sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 17.9px;
+}
+
+#image-temp {
+    width: 149px;
+    height: 149px;
+    border-radius: 50%;
+    margin-left: 30%; 
+}
+
+#helper-text, #email-helper-text, #password-helper-text, #verify-helper-text, #nickname-helper-text{
+        margin: 10px;
+        margin-left: 4px;
+        color: #ff0000;
+        font-family: "Pretendard", sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 14.52px;
+    
+}
+
+#email-textbox, #password-textbox, #verify-textbox, #nickname-textbox {
+    width: 355px;
+    height: 33px;
+
+    background-color: #f4f5f7;
+
+    border: 1px solid #000;
+    border-radius: 4px;
+    
+}
+ 
+#signup-button {
+    width: 355px;
+    height: 33px;
+    margin: 1px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  
+    background-color: #aca0eb;
+    border-radius: 4px;
+  
+    text-decoration: none;
+    border-color: #f4f5f7;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    /* figma에 16.71px로 나와 있지만 로그인 텍스트의 가로 중앙 정렬을 위해 임의로 수정 */
+    line-height: 30px;
+}
+
+/* 회원가입 텍스트 버튼화하기 */
+#login-button {
+    margin-top: 12px;
+    margin-right: 35px;
+    color: #000;
+    font-family: "Pretendard", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16.71px;
+}

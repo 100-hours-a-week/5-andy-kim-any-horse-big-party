@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../css/addPost.css">
+    <title>addPostPage</title>
+</head>
+<body>
+    <section class = "wrap">
+        <article class="container">
+            <button id="back-button"><</button>
+            <description class="name">아무 말 대잔치</description>
+            <img id="profile-image" class="image" src="../images/profile_img.webp"/>
+        </article>
+        <p class="signup-header">게시글 작성</p>
+        <form id="post-add-form" class="container-signup">
+            <description class="name">제목*</description>
+            <input type="text" id="title-textbox" name="textbox" placeholder="제목을 입력해주세요. (최대 26글자)">
+            <description class="name">내용*</description>
+            <textarea id="body-textbox" name="textbox" placeholder="내용을 입력해주세요."></textarea>
+            <description id="helper-text">* helper text</description>
+            <description class="name">이미지</description>
+            <div id="rowcon">
+                <a class="button-round" href="https://github.com" target="_blank">파일 선택</a>
+                <description class="text">파일을 선택해주세요.</description>
+            </div>
+            <button type="submit" id="add-post-button" class="button">완료</button>
+        </form>
+    </section>
+    <div id="userinfo-modalContainer" class="hidden">
+        <button id="modify-userinfo-button" class="modal-userinfo-button">회원번호수정</button>
+        <button id="modify-password-button" class="modal-userinfo-button">비밀번호수정</button>
+        <button id="logout-button" class="modal-userinfo-button">로그아웃</button>
+    </div>
+    <script src="../js/addPost.js"></script>
+</body>
+</html>
