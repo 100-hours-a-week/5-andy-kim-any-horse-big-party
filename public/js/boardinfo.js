@@ -1,12 +1,6 @@
-// 회원 모달 관련 변수
-const modalUserinfo = document.getElementById("userinfo-modalContainer");
-const modifyUserinfoButton = document.getElementById("modify-userinfo-button");
-const modifyPasswordButton = document.getElementById("modify-password-button");
-const logoutButton = document.getElementById("logout-button");
-const profileImageButton = document.getElementById("profile-image");
+import cv from "./commonVariables.js";
+import utils from "./utils.js";
 
-let isUserModal = false;
-//
 const backButton = document.getElementById("back-button");
 const postModifyButton = document.getElementById("post-modify-button");
 const postDeleteButton = document.getElementById("post-delete-button");
@@ -22,70 +16,33 @@ const postId = urlParams.get("postId"); // URL에서 게시글 ID 가져오기
 let isModifyComment = false;
 let tempCommentId = -1;
 
-// JSON 파일 경로
-const postsURL = `http://localhost:3000/posts`;
-
-// JSON 파일을 가져오고 처리하는 함수
-async function fetchData(url) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error("Failed to fetch data");
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-}
-
 //회원정보 수정 이벤트
-modifyUserinfoButton.addEventListener("mouseover", () => {
-  modifyUserinfoButton.style.cursor = "pointer";
-  modifyUserinfoButton.style.backgroundColor = "#e9e9e9";
-});
-modifyUserinfoButton.addEventListener("mouseout", () => {
-  modifyUserinfoButton.style.backgroundColor = "#d9d9d9";
-});
-modifyUserinfoButton.addEventListener("click", () => {
+cv.modifyUserinfoButton.addEventListener("click", () => {
   window.location.href = "userinfo.html";
 });
 
-modifyPasswordButton.addEventListener("mouseover", () => {
-  modifyPasswordButton.style.cursor = "pointer";
-  modifyPasswordButton.style.backgroundColor = "#e9e9e9";
-});
-modifyPasswordButton.addEventListener("mouseout", () => {
-  modifyPasswordButton.style.backgroundColor = "#d9d9d9";
-});
-modifyPasswordButton.addEventListener("click", () => {
+cv.modifyPasswordButton.addEventListener("click", () => {
   window.location.href = "password.html";
 });
 
-logoutButton.addEventListener("mouseover", () => {
-  logoutButton.style.cursor = "pointer";
-  logoutButton.style.backgroundColor = "#e9e9e9";
-});
-logoutButton.addEventListener("mouseout", () => {
-  logoutButton.style.backgroundColor = "#d9d9d9";
-});
-logoutButton.addEventListener("click", () => {
+cv.logoutButton.addEventListener("click", () => {
   window.location.href = "login.html";
 });
 
-profileImageButton.addEventListener("click", () => {
-  if (isUserModal) {
-    isUserModal = false;
-    modalUserinfo.classList.add("hidden");
+cv.profileImageButton.addEventListener("click", () => {
+  if (cv.isUserModal) {
+    cv.isUserModal = false;
+    cv.modalUserinfo.classList.add("hidden");
   } else {
-    isUserModal = true;
-    modalUserinfo.classList.remove("hidden");
+    cv.isUserModal = true;
+    cv.modalUserinfo.classList.remove("hidden");
   }
 });
 
+//
+
 async function renderPost() {
-  //fetch요청으로 조회수 더해주는 로직 작성
-  const posts = await fetchData(postsURL);
+  const posts = await utils.fetchData(cv.postsURL);
 
   const post = posts[postId - 1];
   const comments = post.comments;
@@ -145,27 +102,14 @@ async function renderPost() {
       window.location.href = `boardinfo.html?postId=${postId}`;
     });
 
-  function getCurrentDateTime() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-    const hours = String(now.getHours()).padStart(2, "0");
-    const minutes = String(now.getMinutes()).padStart(2, "0");
-    const seconds = String(now.getSeconds()).padStart(2, "0");
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  }
-
   async function addComment(comment) {
-    const url = `http://localhost:3000/posts/${postId}/comments`;
+    const url = cv.postsURL + `/posts/${postId}/comments`;
     console.log(url);
-    // try {
     const newComment = {
       id: 0,
       userId: 7,
       body: comment,
-      date: getCurrentDateTime(),
+      date: utils.getCurrentDateTime(),
     };
     const response = await fetch(url, {
       method: "POST",
@@ -179,19 +123,14 @@ async function renderPost() {
     }
     const responseData = await response.json();
     console.log("New comment added:", responseData);
-    // }
-    //  catch (error) {
-    //     console.error('Error adding user:', error.message);
-    // }
   }
 
   async function modifyComment(comment) {
-    const url = `http://localhost:3000/posts/${postId}/${tempCommentId}`;
+    const url = cv.postsURL + `/${postId}/${tempCommentId}`;
     console.log(url);
-    // try {
     const modifyComment = {
       body: comment,
-      date: getCurrentDateTime(),
+      date: utils.getCurrentDateTime(),
     };
     const response = await fetch(url, {
       method: "PATCH",
@@ -203,13 +142,6 @@ async function renderPost() {
     if (!response.ok) {
       throw new Error("Failed to modify comment");
     }
-    // 응답이 modify json data를 반환하도록 수정하면 사용
-    // const responseData = await response.json();
-    // console.log('Comment modified:', responseData);
-    // }
-    //  catch (error) {
-    //     console.error('Error adding user:', error.message);
-    // }
   }
 
   comments.forEach((comment) => {

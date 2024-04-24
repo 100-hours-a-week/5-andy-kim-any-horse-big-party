@@ -1,0 +1,25 @@
+/* userinfo-modal */
+#userinfo-modalContainer {
+  position: absolute;
+  width: 115px;
+  height: 105px;
+  top: 88px;
+  left: 50%;
+  transform: translateX(140px);
+}
+
+#userinfo-modalContainer.hidden {
+  display: none;
+}
+
+.modal-userinfo-button {
+  width: 100%;
+  height: 35px;
+  border: 0px;
+  background-color: #d9d9d9;
+  cursor: pointer;
+}
+
+.modal-userinfo-button:hover {
+  background-color: #e9e9e9;
+}

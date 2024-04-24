@@ -1,66 +1,88 @@
 <!DOCTYPE html>
 <html lang="kr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" type="text/css" href="../css/boardinfo.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/boardinfo.css" />
     <title>loginPage</title>
-</head>
-<body>
-    <section id = "wrap">
-        <article class="container">
-            <button id="back-button"><</button>
-            <description class="name">아무 말 대잔치</description>
-            <img id="profile-image" class="image" src="../images/profile_img.webp"/>
-        </article>
-        <article id="container-boardinfo">
-            <p id="boardinfo-header"></p>
-            <div class="writer">
-                <img id="writer-image"class="image">
-                <p id="post-writer" class="user"></p>
-                <p id ="post-date" class="date"></p>
-                <a id="post-modify-button">수정</a>
-                <a id="post-delete-button">삭제</a>
-            </div>
-            <hr class="line"/>
-            <div class="gray-box"></div>
-            <div class="container-text">
-            <p id="board-main"></p>
-            </div>
-            <div class="container-button">
-                <a class="button-round2"><span id="likes"></span>조회수</a>
-                <a class="button-round2"><span id="comments"></span>댓글</a>
-            </div>
-            <form id="comment-post-form" class="container-board">
-                <input type="text" id="textbox" name="textbox" placeholder="댓글을 남겨주세요!">
-                <div class="line"></div>
-                <button type="submit" id="comment-post-button" class="button-round3">댓글 등록</button>
-            </form>
-            
-        </article>
+  </head>
+  <body>
+    <section id="wrap">
+      <article class="container">
+        <button id="back-button"><</button>
+        <description class="name">아무 말 대잔치</description>
+        <img
+          id="profile-image"
+          class="image"
+          src="../images/profile_img.webp"
+        />
+      </article>
+      <article id="container-boardinfo">
+        <p id="boardinfo-header"></p>
+        <div class="writer">
+          <img id="writer-image" class="image" />
+          <p id="post-writer" class="user"></p>
+          <p id="post-date" class="date"></p>
+          <a id="post-modify-button">수정</a>
+          <a id="post-delete-button">삭제</a>
+        </div>
+        <hr class="line" />
+        <div class="gray-box"></div>
+        <div class="container-text">
+          <p id="board-main"></p>
+        </div>
+        <div class="container-button">
+          <a class="button-round2"><span id="likes"></span>조회수</a>
+          <a class="button-round2"><span id="comments"></span>댓글</a>
+        </div>
+        <form id="comment-post-form" class="container-board">
+          <input
+            type="text"
+            id="textbox"
+            name="textbox"
+            placeholder="댓글을 남겨주세요!"
+          />
+          <div class="line"></div>
+          <button type="submit" id="comment-post-button" class="button-round3">
+            댓글 등록
+          </button>
+        </form>
+      </article>
     </section>
     <div id="modalContainer" class="hidden">
-        <p>게시글을 삭제하시겠습니까?</p>
-        <p id="temp-text">삭제한 내용은 복구할 수 없습니다.</p>
-        <div id="buttonContent">
-            <button id="post-cancle-button" class="modal-cancle-button">취소</button>
-            <button id="post-accept-button" class="modal-accept-button">확인</button>
-        </div>
+      <p>게시글을 삭제하시겠습니까?</p>
+      <p id="temp-text">삭제한 내용은 복구할 수 없습니다.</p>
+      <div id="buttonContent">
+        <button id="post-cancle-button" class="modal-cancle-button">
+          취소
+        </button>
+        <button id="post-accept-button" class="modal-accept-button">
+          확인
+        </button>
+      </div>
     </div>
     <div id="comment-modalContainer" class="hidden">
-        <p>댓글을 삭제하시겠습니까?</p>
-        <p id="temp-text">삭제한 내용은 복구할 수 없습니다.</p>
-        <div id="buttonContent">
-            <button id="comment-cancle-button" class="modal-cancle-button">취소</button>
-            <button id="comment-accept-button" class="modal-accept-button">확인</button>
-        </div>
+      <p>댓글을 삭제하시겠습니까?</p>
+      <p id="temp-text">삭제한 내용은 복구할 수 없습니다.</p>
+      <div id="buttonContent">
+        <button id="comment-cancle-button" class="modal-cancle-button">
+          취소
+        </button>
+        <button id="comment-accept-button" class="modal-accept-button">
+          확인
+        </button>
+      </div>
     </div>
     <div id="userinfo-modalContainer" class="hidden">
-        <button id="modify-userinfo-button" class="modal-userinfo-button">회원번호수정</button>
-        <button id="modify-password-button" class="modal-userinfo-button">비밀번호수정</button>
-        <button id="logout-button" class="modal-userinfo-button">로그아웃</button>
+      <button id="modify-userinfo-button" class="modal-userinfo-button">
+        회원번호수정
+      </button>
+      <button id="modify-password-button" class="modal-userinfo-button">
+        비밀번호수정
+      </button>
+      <button id="logout-button" class="modal-userinfo-button">로그아웃</button>
     </div>
-    <script src="../js/boardinfo.js"></script>
-</body>
+    <script type="module" src="../js/boardinfo.js"></script>
+  </body>
 </html>
