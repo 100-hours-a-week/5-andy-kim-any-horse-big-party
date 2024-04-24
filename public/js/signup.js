@@ -1,13 +1,25 @@
+import cv from "./commonVariables.js";
+
 const backButton = document.getElementById("back-button");
 const loginButton = document.getElementById("login-button");
 const signupButton = document.getElementById("signup-button");
 const emailInput = document.getElementById("email-textbox");
 const emailHelperText = document.getElementById("email-helper-text");
-signupButton.disabled = true;
+const passwordInput = document.getElementById("password-textbox");
+const passwordHelperText = document.getElementById("password-helper-text");
+const verifyInput = document.getElementById("verify-textbox");
+const verifyHelperText = document.getElementById("verify-helper-text");
+const nicknameInput = document.getElementById("nickname-textbox");
+const nicknameHelperText = document.getElementById("nickname-helper-text");
+const signupForm = document.getElementById("signup-form");
+
 let emailValid = false;
 let passwordValid = false;
 let verifyValid = false;
 let nicknameValid = false;
+
+signupButton.disabled = true;
+
 emailInput.addEventListener("focusout", () => {
   emailValid = false;
   const email = emailInput.value;
@@ -18,7 +30,7 @@ emailInput.addEventListener("focusout", () => {
   } else if (!isValidEmail(email)) {
     emailHelperText.textContent = "* 유효하지 않은 이메일 형식입니다.";
   } else {
-    fetch("http://localhost:3000/users")
+    fetch(cv.usersURL)
       .then((response) => response.json())
       .then((data) => {
         const user = data.find((user) => user.email === email);
@@ -33,8 +45,6 @@ emailInput.addEventListener("focusout", () => {
   }
 });
 
-const passwordInput = document.getElementById("password-textbox");
-const passwordHelperText = document.getElementById("password-helper-text");
 passwordInput.addEventListener("focusout", () => {
   passwordValid = false;
   const password = passwordInput.value;
@@ -52,8 +62,6 @@ passwordInput.addEventListener("focusout", () => {
   }
 });
 
-const verifyInput = document.getElementById("verify-textbox");
-const verifyHelperText = document.getElementById("verify-helper-text");
 verifyInput.addEventListener("focusout", () => {
   verifyValid = false;
   const verify = verifyInput.value;
@@ -69,8 +77,6 @@ verifyInput.addEventListener("focusout", () => {
   }
 });
 
-const nicknameInput = document.getElementById("nickname-textbox");
-const nicknameHelperText = document.getElementById("nickname-helper-text");
 nicknameInput.addEventListener("focusout", () => {
   const nickname = nicknameInput.value;
   nicknameValid = false;
@@ -81,7 +87,7 @@ nicknameInput.addEventListener("focusout", () => {
   } else if (!isValidNickname(nickname)) {
     nicknameHelperText.textContent = "* 유효하지 않은 닉네임 형식입니다.";
   } else {
-    fetch("http://localhost:3000/users")
+    fetch(cv.usersURL)
       .then((response) => response.json())
       .then((data) => {
         const user = data.find((user) => user.nickname === nickname);
@@ -123,25 +129,24 @@ function isValidNickname(nickname) {
   return nicknameRegex.test(nickname);
 }
 
-document
-  .getElementById("signup-form")
-  .addEventListener("submit", function (event) {
-    event.preventDefault(); // 폼 제출 중지
-    const email = emailInput.value;
-    const password = passwordInput.value;
-    const nickname = nicknameInput.value;
-    const imagePath = document.getElementById("temp-image");
-    addUser(email, password, imagePath, nickname);
-    window.location.href = "board.html";
-  });
+signupForm.addEventListener("submit", function (event) {
+  const email = emailInput.value;
+  const password = passwordInput.value;
+  const nickname = nicknameInput.value;
+  const imagePath = document.getElementById("temp-image");
 
-loginButton.addEventListener("click", (event) => {
   event.preventDefault(); // 폼 제출 중지
-  window.location.href = "login.html";
+  addUser(email, password, imagePath, nickname);
+  window.location.href = `board.html`;
 });
-// 평범한 fetch문으로 바꾸기
+
+loginButton.addEventListener(`click`, (event) => {
+  event.preventDefault(); // 폼 제출 중지
+  window.location.href = `login.html`;
+});
+
 async function addUser(email, password, imagePath, nickname) {
-  const url = "http://localhost:3000/users/signup";
+  const url = cv.usersURL + `/signup`;
   try {
     // 새로운 사용자 객체 생성
     const newUser = {

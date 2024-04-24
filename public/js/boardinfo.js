@@ -10,202 +10,124 @@ const modalAcceptButton = document.getElementById("post-accept-button");
 const modalCancleButton = document.getElementById("post-cancle-button");
 const commentAcceptButton = document.getElementById("comment-accept-button");
 const commentCancleButton = document.getElementById("comment-cancle-button");
+
 const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get("postId"); // URL에서 게시글 ID 가져오기
+//comment
+const commentForm = document.getElementById("comment-post-form");
+const container = document.getElementById("container-boardinfo");
+
+//renderPost
+const title = document.getElementById("boardinfo-header");
+const image = document.getElementById("writer-image");
+const postWriter = document.getElementById("post-writer");
+const postDate = document.getElementById("post-date");
+const mainText = document.getElementById("board-main");
+const spanLikes = document.getElementById("likes");
+const spanComments = document.getElementById("comments");
+const commentPostButton = document.getElementById("comment-post-button");
 
 let isModifyComment = false;
 let tempCommentId = -1;
+//renderComment
+const commentInput = document.getElementById("textbox");
 
-//회원정보 수정 이벤트
-cv.modifyUserinfoButton.addEventListener("click", () => {
-  window.location.href = "userinfo.html";
-});
+let commentValid = false;
 
-cv.modifyPasswordButton.addEventListener("click", () => {
-  window.location.href = "password.html";
-});
+// 페이지 로딩 이벤트
+window.onload = function () {
+  renderBoardinfo();
+};
 
-cv.logoutButton.addEventListener("click", () => {
-  window.location.href = "login.html";
-});
-
-cv.profileImageButton.addEventListener("click", () => {
-  if (cv.isUserModal) {
-    cv.isUserModal = false;
-    cv.modalUserinfo.classList.add("hidden");
-  } else {
-    cv.isUserModal = true;
-    cv.modalUserinfo.classList.remove("hidden");
-  }
-});
-
-//
-
-async function renderPost() {
+// renderBoardinfo
+async function renderBoardinfo() {
   const posts = await utils.fetchData(cv.postsURL);
-
   const post = posts[postId - 1];
   const comments = post.comments;
 
-  const title = document.getElementById("boardinfo-header");
-  title.textContent = post.title;
-
-  const image = document.getElementById("writer-image");
-  image.src = post.attachFilePath;
-
-  const postWriter = document.getElementById("post-writer");
-  postWriter.textContent = post.userId;
-
-  const postDate = document.getElementById("post-date");
-  postDate.textContent = post.date;
-
-  const mainText = document.getElementById("board-main");
-  mainText.textContent = post.body;
-
-  const spanLikes = document.getElementById("likes");
-  spanLikes.textContent = post.likes;
-
-  const spanComments = document.getElementById("comments");
-  spanComments.textContent = post.comments.length;
-
-  const commentInput = document.getElementById("textbox");
-  const commentPostButton = document.getElementById("comment-post-button");
-  commentPostButton.disabled = true;
-  let commentValid = false;
-
-  function commentButtonValid() {
-    if (commentValid) {
-      commentPostButton.style.backgroundColor = "#7f6aee";
-      commentPostButton.style.cursor = "pointer";
-      commentPostButton.disabled = false;
-    } else {
-      commentPostButton.style.backgroundColor = "#aca0eb";
-      commentPostButton.disabled = true;
-    }
-  }
+  renderPost(post);
 
   commentInput.addEventListener("focusout", () => {
     const comment = commentInput.value;
     commentValid = false;
     if (comment) commentValid = true;
-    console.log(commentValid);
     commentButtonValid();
   });
 
-  document
-    .getElementById("comment-post-form")
-    .addEventListener("submit", function (event) {
-      event.preventDefault(); // 폼 제출 중지
-      const comment = commentInput.value;
-      if (isModifyComment) modifyComment(comment, tempCommentId);
-      else addComment(comment);
-      window.location.href = `boardinfo.html?postId=${postId}`;
-    });
-
-  async function addComment(comment) {
-    const url = cv.postsURL + `/posts/${postId}/comments`;
-    console.log(url);
-    const newComment = {
-      id: 0,
-      userId: 7,
-      body: comment,
-      date: utils.getCurrentDateTime(),
-    };
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newComment),
-    });
-    if (!response.ok) {
-      throw new Error("Failed to add comment");
-    }
-    const responseData = await response.json();
-    console.log("New comment added:", responseData);
-  }
-
-  async function modifyComment(comment) {
-    const url = cv.postsURL + `/${postId}/${tempCommentId}`;
-    console.log(url);
-    const modifyComment = {
-      body: comment,
-      date: utils.getCurrentDateTime(),
-    };
-    const response = await fetch(url, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(modifyComment),
-    });
-    if (!response.ok) {
-      throw new Error("Failed to modify comment");
-    }
-  }
-
   comments.forEach((comment) => {
-    const container = document.getElementById("container-boardinfo");
-    const wrap = document.createElement("wrap");
-    wrap.classList.add("comment-box");
+    renderComment(comment);
+  });
+}
 
-    const article = document.createElement("article");
-    article.classList.add("writer");
-    article.dataset.commentId = comment.id; // 데이터 세트 commentId를 추가
+commentForm.addEventListener("submit", (event) => {
+  event.preventDefault(); // 폼 제출 중지
+  const comment = commentInput.value;
+  if (isModifyComment) modifyComment(comment, tempCommentId);
+  else addComment(comment);
+  window.location.href = `boardinfo.html?postId=${postId}`;
+});
 
-    const image = document.createElement("img");
-    image.classList.add("image");
-    // image.src = 유저 찾아가서 프로필 이미지 띄우기
-    image.src = "../images/profile_img.webp";
+function renderPost(post) {
+  title.textContent = post.title;
+  image.src = post.attachFilePath;
+  postWriter.textContent = post.userId;
+  postDate.textContent = post.date;
+  mainText.textContent = post.body;
+  spanLikes.textContent = post.likes;
+  spanComments.textContent = post.comments.length;
+  commentPostButton.disabled = true;
+}
 
-    const user = document.createElement("p");
-    user.classList.add("user");
-    user.textContent = "더미 사용자 " + comment.userId;
-    // user.textContent = 유저 찾아가서 닉네임 띄우기
+function renderComment(comment) {
+  const wrap = document.createElement("wrap");
+  const article = document.createElement("article");
+  const image = document.createElement("img");
+  const user = document.createElement("p");
+  const date = document.createElement("p");
+  const body = document.createElement("p");
+  const modifyButton = document.createElement("a");
+  const deleteButton = document.createElement("a");
 
-    const date = document.createElement("p");
-    date.classList.add("date");
-    date.textContent = comment.date;
+  wrap.classList.add("comment-box");
+  article.classList.add("writer");
+  article.dataset.commentId = comment.id; // 데이터 세트 commentId를 추가
+  image.classList.add("image");
+  image.src = "../images/profile_img.webp"; // 수정 요망
+  user.classList.add("user");
+  user.textContent = "더미 사용자 " + comment.userId;
+  date.classList.add("date");
+  date.textContent = comment.date;
+  body.classList.add("comment");
+  modifyButton.classList.add("modify-button");
+  modifyButton.textContent = "수정";
+  deleteButton.classList.add("delete-button");
+  deleteButton.textContent = "삭제";
+  body.textContent = comment.body;
 
-    const body = document.createElement("p");
-    body.classList.add("comment");
+  article.appendChild(image);
+  article.appendChild(user);
+  article.appendChild(date);
+  article.appendChild(modifyButton);
+  article.appendChild(deleteButton);
+  wrap.appendChild(article);
+  wrap.appendChild(body);
+  container.appendChild(wrap);
 
-    const modifyButton = document.createElement("a");
-    modifyButton.classList.add("modify-button");
-    modifyButton.textContent = "수정";
-
-    const deleteButton = document.createElement("a");
-    deleteButton.classList.add("delete-button");
-    deleteButton.textContent = "삭제";
-
-    body.textContent = comment.body;
-
-    article.appendChild(image);
-    article.appendChild(user);
-    article.appendChild(date);
-    article.appendChild(modifyButton);
-    article.appendChild(deleteButton);
-
-    wrap.appendChild(article);
-    wrap.appendChild(body);
-    container.appendChild(wrap);
-
-    modifyButton.addEventListener("click", () => {
-      if (isModifyComment) {
-        commentPostButton.textContent = "댓글 작성";
-        commentInput.value = "";
-        isModifyComment = false;
-      } else {
-        commentPostButton.textContent = "댓글 수정";
-        commentInput.value = comment.body;
-        tempCommentId = comment.id;
-        isModifyComment = true;
-      }
-    });
-    deleteButton.addEventListener("click", () => {
-      commentModal.classList.remove("hidden");
-      commentAcceptButton.dataset.commentId = comment.id; // 데이터 세트 commentId를 추가
-    });
+  modifyButton.addEventListener("click", () => {
+    if (isModifyComment) {
+      commentPostButton.textContent = "댓글 작성";
+      commentInput.value = "";
+      isModifyComment = false;
+    } else {
+      commentPostButton.textContent = "댓글 수정";
+      commentInput.value = comment.body;
+      tempCommentId = comment.id;
+      isModifyComment = true;
+    }
+  });
+  deleteButton.addEventListener("click", () => {
+    commentModal.classList.remove("hidden");
+    commentAcceptButton.dataset.commentId = comment.id; // 데이터 세트 commentId를 추가
   });
 }
 
@@ -233,7 +155,6 @@ modalCancleButton.addEventListener("click", () => {
 
 commentAcceptButton.addEventListener("click", (event) => {
   const commentId = event.target.dataset.commentId; // 클릭된 게시글의 ID 가져오기
-  console.log(commentId);
   deleteComment(commentId);
   commentModal.classList.add("hidden");
   window.location.href = `boardinfo.html?postId=${postId}`;
@@ -243,12 +164,8 @@ commentCancleButton.addEventListener("click", () => {
   commentModal.classList.add("hidden");
 });
 
-window.onload = function () {
-  renderPost();
-};
-
 async function deletePost() {
-  const url = `http://localhost:3000/posts/${postId}`;
+  const url = cv.postsURL + `/${postId}`;
   try {
     const response = await fetch(url, {
       method: "DELETE",
@@ -261,8 +178,48 @@ async function deletePost() {
   }
 }
 
+async function addComment(comment) {
+  const url = cv.postsURL + `/${postId}/comments`;
+  const newComment = {
+    id: 0,
+    userId: 7,
+    body: comment,
+    date: utils.getCurrentDateTime(),
+  };
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newComment),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to add comment");
+  }
+  const responseData = await response.json();
+  console.log("New comment added:", responseData);
+}
+
+async function modifyComment(comment, tempCommentId) {
+  const url = cv.postsURL + `/${postId}/${tempCommentId}`;
+  const modifyComment = {
+    body: comment,
+    date: utils.getCurrentDateTime(),
+  };
+  const response = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(modifyComment),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to modify comment");
+  }
+}
+
 async function deleteComment(commentId) {
-  const url = `http://localhost:3000/posts/${postId}/${commentId}`;
+  const url = cv.postsURL + `/${postId}/${commentId}`;
   try {
     const response = await fetch(url, {
       method: "DELETE",
@@ -274,3 +231,37 @@ async function deleteComment(commentId) {
     console.error("Error deleting comment:", error.message);
   }
 }
+
+function commentButtonValid() {
+  if (commentValid) {
+    commentPostButton.style.backgroundColor = "#7f6aee";
+    commentPostButton.style.cursor = "pointer";
+    commentPostButton.disabled = false;
+  } else {
+    commentPostButton.style.backgroundColor = "#aca0eb";
+    commentPostButton.disabled = true;
+  }
+}
+
+//회원정보 수정 이벤트
+cv.modifyUserinfoButton.addEventListener("click", () => {
+  window.location.href = "userinfo.html";
+});
+
+cv.modifyPasswordButton.addEventListener("click", () => {
+  window.location.href = "password.html";
+});
+
+cv.logoutButton.addEventListener("click", () => {
+  window.location.href = "login.html";
+});
+
+cv.profileImageButton.addEventListener("click", () => {
+  if (cv.isUserModal) {
+    cv.isUserModal = false;
+    cv.modalUserinfo.classList.add("hidden");
+  } else {
+    cv.isUserModal = true;
+    cv.modalUserinfo.classList.remove("hidden");
+  }
+});

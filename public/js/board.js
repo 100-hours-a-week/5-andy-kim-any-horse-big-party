@@ -5,33 +5,28 @@ const writeboardButton = document.getElementById("writeboard-button");
 
 function createPostArticle(post) {
   const article = document.createElement("article");
+  const title = document.createElement("description");
+  const info = document.createElement("div");
+  const state1 = document.createElement("p");
+  const state2 = document.createElement("p");
+  const line = document.createElement("div");
+  const writer = document.createElement("div");
+  const image = document.createElement("img");
+  const writerName = document.createElement("p");
+
   article.classList.add("container-board");
   article.dataset.postId = post.id; // 데이터 세트 postId를 추가
-
-  const title = document.createElement("description");
   title.classList.add("name");
   title.textContent = post.title;
-
-  const info = document.createElement("div");
   info.classList.add("info");
-
-  const state1 = document.createElement("p");
   state1.classList.add("state");
   state1.textContent = `좋아요 ${post.likes} 댓글 ${post.comments.length} 조회수 ${post.views}`;
-
-  const state2 = document.createElement("p");
   state2.classList.add("state");
   state2.textContent = post.date;
-
-  const line = document.createElement("div");
   line.classList.add("line");
-
-  const writer = document.createElement("div");
   writer.classList.add("writer");
-  const image = document.createElement("img");
   image.classList.add("image");
   image.src = post.attachFilePath;
-  const writerName = document.createElement("p");
   writerName.classList.add("state");
   writerName.textContent = post.userId;
 
@@ -65,6 +60,15 @@ writeboardButton.addEventListener("click", () => {
   window.location.href = "addPost.html";
 });
 
+// container-board class 및 자식 요소를 클릭하면 이벤트 발생
+document.addEventListener("click", (event) => {
+  const containerBoard = event.target.closest(".container-board");
+  if (containerBoard) {
+    const postId = containerBoard.dataset.postId; // 클릭된 게시글의 ID 가져오기
+    window.location.href = `boardinfo.html?postId=${postId}`; // 게시글 ID를 쿼리 문자열로 전달하여 페이지 이동
+  }
+});
+
 //회원정보 수정 이벤트
 cv.modifyUserinfoButton.addEventListener("click", () => {
   window.location.href = "userinfo.html";
@@ -85,14 +89,5 @@ cv.profileImageButton.addEventListener("click", () => {
   } else {
     cv.isUserModal = true;
     cv.modalUserinfo.classList.remove("hidden");
-  }
-});
-
-// container-board class 및 자식 요소를 클릭하면 이벤트 발생
-document.addEventListener("click", (event) => {
-  const containerBoard = event.target.closest(".container-board");
-  if (containerBoard) {
-    const postId = containerBoard.dataset.postId; // 클릭된 게시글의 ID 가져오기
-    window.location.href = `boardinfo.html?postId=${postId}`; // 게시글 ID를 쿼리 문자열로 전달하여 페이지 이동
   }
 });

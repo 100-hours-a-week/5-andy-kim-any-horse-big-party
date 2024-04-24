@@ -10,6 +10,8 @@ const logoutButton = document.getElementById("logout-button");
 const profileImageButton = document.getElementById("profile-image");
 
 let isUserModal = false;
+// 토스트메세지
+const toastContainer = document.getElementById("toast-container");
 
 export default {
   usersURL,
@@ -20,4 +22,5 @@ export default {
   logoutButton,
   profileImageButton,
   isUserModal,
+  toastContainer,
 };
