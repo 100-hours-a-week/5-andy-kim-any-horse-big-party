@@ -1,33 +1,56 @@
 import cv from "./commonVariables.js";
 import utils from "./utils.js";
 
+const profileImage = document.getElementById("profile-image");
 // 탈퇴 모달 관련 변수
 const modalUserDelete = document.getElementById("modalContainer");
 const deleteUserButton = document.getElementById("delete-user-button");
 const modalAcceptButton = document.getElementById("user-accept-button");
 const modalCancleButton = document.getElementById("user-cancle-button");
-// 토스트메세지 변수
-const toastContainer = document.getElementById("toast-container");
 // 회원정보 폼 관련 변수
 const userinfoFormContainer = document.getElementById("userinfo-form");
+const imageInput = document.getElementById("imageUpload");
+const userinfoImage = document.getElementById("image");
 // 변수 이름 레전드
 const userinfoModifyButton = document.getElementById("userinfo-modify-button");
 const userMail = document.getElementById("mail-address");
 const nicknameInput = document.getElementById("nickname-textbox");
 const userId = 1;
 
+let selectedFile = null;
+
 let nicknameValid = true;
 
 //페이지 로딩 이벤트
 window.onload = function () {
   userinfoModifyButton.disabled = false;
+  const nowUserId = 1;
+
+  fetch(cv.usersURL + `/${nowUserId}/image`, {
+    method: "GET",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        console.log("fetch error");
+      }
+      console.log(response);
+      return response.blob(); // 이미지 데이터를 Blob 형식으로 변환
+    })
+    .then((blob) => {
+      console.log(blob);
+      const imageUrl = URL.createObjectURL(blob); // Blob URL 생성
+      console.log(imageUrl);
+      profileImage.src = imageUrl; // 이미지의 src 속성에 Blob URL 설정
+    });
   renderUserinfo();
 };
 
 // 회원 탈퇴 이벤트
 modalAcceptButton.addEventListener("click", () => {
-  deleteUser();
-  window.location.href = "login.html";
+  alert("해당 기능은 현재 지원하지 않습니다.");
+  window.location.href = "../html/userinfo.html";
+  // deleteUser();
+  // window.location.href = "../html/login.html";
 });
 
 modalCancleButton.addEventListener("click", () => {
@@ -39,21 +62,32 @@ deleteUserButton.addEventListener("click", () => {
 });
 
 // modifyUserinfo
-async function modifyUserinfo(nickname) {
+async function modifyUserinfo(nickname, imageFile) {
   const url = cv.usersURL + `/${userId}`;
   // try {
   const modifyUser = {
     nickname: nickname,
   };
-  const response = await fetch(url, {
+  const nicknameResponse = await fetch(url, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(modifyUser),
   });
-  if (!response.ok) {
+  if (!nicknameResponse.ok) {
     throw new Error("Failed to modify comment");
+  }
+  if (imageFile) {
+    const formData = new FormData();
+    formData.append("image", imageFile);
+    const imageResponse = await fetch(url + `/image`, {
+      method: "PATCH",
+      body: formData,
+    });
+    if (!imageResponse.ok) {
+      throw new Error("Failed to upload image");
+    }
   }
 }
 
@@ -82,11 +116,29 @@ function modifyButtonValid() {
 
 // renderUserinfo
 async function renderUserinfo() {
+  const url = cv.usersURL + `/${userId}/image`;
   const users = await utils.fetchData(cv.usersURL);
   const user = users[userId - 1];
 
   nicknameInput.value = user.nickname;
   userMail.textContent = user.email;
+
+  await fetch(url, {
+    method: "GET",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        console.log("fetch error");
+      }
+      console.log(response);
+      return response.blob(); // 이미지 데이터를 Blob 형식으로 변환
+    })
+    .then((blob) => {
+      console.log(blob);
+      const imageUrl = URL.createObjectURL(blob); // Blob URL 생성
+      console.log(imageUrl);
+      userinfoImage.src = imageUrl; // 이미지의 src 속성에 Blob URL 설정
+    });
 
   nicknameInput.addEventListener("focusout", () => {
     const nickname = nicknameInput.value;
@@ -98,10 +150,27 @@ async function renderUserinfo() {
   userinfoFormContainer.addEventListener("submit", function (event) {
     const nickname = nicknameInput.value;
     event.preventDefault(); // 폼 제출 중지
-    modifyUserinfo(nickname);
+    modifyUserinfo(nickname, selectedFile);
     showToast();
   });
 }
+// 이미지 업로드 이벤트
+
+imageInput.addEventListener("change", () => {
+  selectedFile = imageInput.files[0];
+  const fileReader = new FileReader();
+
+  fileReader.readAsDataURL(selectedFile);
+  fileReader.onload = function () {
+    userinfoImage.src = fileReader.result;
+  };
+});
+
+imageInput.onchange = () => {
+  selectedFile = imageInput.files[0];
+  console.log(selectedFile);
+};
+
 //showToast
 function showToast() {
   cv.toastContainer.style.visibility = "visible";
@@ -113,15 +182,15 @@ function showToast() {
 
 //회원정보 수정 이벤트
 cv.modifyUserinfoButton.addEventListener("click", () => {
-  window.location.href = "userinfo.html";
+  window.location.href = "../html/userinfo.html";
 });
 
 cv.modifyPasswordButton.addEventListener("click", () => {
-  window.location.href = "password.html";
+  window.location.href = "../html/password.html";
 });
 
 cv.logoutButton.addEventListener("click", () => {
-  window.location.href = "login.html";
+  window.location.href = "../html/login.html";
 });
 
 cv.profileImageButton.addEventListener("click", () => {

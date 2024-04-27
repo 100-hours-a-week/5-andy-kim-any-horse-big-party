@@ -17,6 +17,8 @@ const postId = urlParams.get("postId"); // URL에서 게시글 ID 가져오기
 const commentForm = document.getElementById("comment-post-form");
 const container = document.getElementById("container-boardinfo");
 
+//
+const profileImage = document.getElementById("profile-image");
 //renderPost
 const title = document.getElementById("boardinfo-header");
 const image = document.getElementById("writer-image");
@@ -31,6 +33,7 @@ let isModifyComment = false;
 let tempCommentId = -1;
 //renderComment
 const commentInput = document.getElementById("textbox");
+const imageBox = document.getElementById("image-box");
 
 let commentValid = false;
 
@@ -44,6 +47,24 @@ async function renderBoardinfo() {
   const posts = await utils.fetchData(cv.postsURL);
   const post = posts[postId - 1];
   const comments = post.comments;
+  const nowUserId = 1;
+
+  await fetch(cv.usersURL + `/${nowUserId}/image`, {
+    method: "GET",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        console.log("fetch error");
+      }
+      console.log(response);
+      return response.blob(); // 이미지 데이터를 Blob 형식으로 변환
+    })
+    .then((blob) => {
+      console.log(blob);
+      const imageUrl = URL.createObjectURL(blob); // Blob URL 생성
+      console.log(imageUrl);
+      profileImage.src = imageUrl; // 이미지의 src 속성에 Blob URL 설정
+    });
 
   renderPost(post);
 
@@ -64,14 +85,45 @@ commentForm.addEventListener("submit", (event) => {
   const comment = commentInput.value;
   if (isModifyComment) modifyComment(comment, tempCommentId);
   else addComment(comment);
-  window.location.href = `boardinfo.html?postId=${postId}`;
+  window.location.href = `../html/boardinfo.html?postId=${postId}`;
 });
 
-function renderPost(post) {
+async function renderPost(post) {
+  await fetch(cv.usersURL + `/${post.userId}/image`, {
+    method: "GET",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        console.log("fetch error");
+      }
+      console.log(response);
+      return response.blob(); // 이미지 데이터를 Blob 형식으로 변환
+    })
+    .then((blob) => {
+      console.log(blob);
+      const imageUrl = URL.createObjectURL(blob); // Blob URL 생성
+      console.log(imageUrl);
+      image.src = imageUrl; // 이미지의 src 속성에 Blob URL 설정
+    });
   title.textContent = post.title;
-  image.src = post.attachFilePath;
   postWriter.textContent = post.userId;
   postDate.textContent = post.date;
+  await fetch(cv.postsURL + `/${postId}/image`, {
+    method: "GET",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        console.log("fetch error");
+      }
+      console.log(response);
+      return response.blob(); // 이미지 데이터를 Blob 형식으로 변환
+    })
+    .then((blob) => {
+      console.log(blob);
+      const imageUrl = URL.createObjectURL(blob); // Blob URL 생성
+      console.log(imageUrl);
+      imageBox.src = imageUrl; // 이미지의 src 속성에 Blob URL 설정
+    });
   mainText.textContent = post.body;
   spanLikes.textContent = post.likes;
   spanComments.textContent = post.comments.length;
@@ -132,11 +184,11 @@ function renderComment(comment) {
 }
 
 backButton.addEventListener("click", () => {
-  window.location.href = "board.html";
+  window.location.href = "../html/board.html";
 });
 
 postModifyButton.addEventListener("click", () => {
-  window.location.href = `modify.html?postId=${postId}`;
+  window.location.href = `../html/modify.html?postId=${postId}`;
 });
 
 postDeleteButton.addEventListener("click", () => {
@@ -146,7 +198,7 @@ postDeleteButton.addEventListener("click", () => {
 modalAcceptButton.addEventListener("click", () => {
   postModal.classList.add("hidden");
   deletePost();
-  window.location.href = "board.html";
+  window.location.href = "../html/board.html";
 });
 
 modalCancleButton.addEventListener("click", () => {
@@ -157,7 +209,7 @@ commentAcceptButton.addEventListener("click", (event) => {
   const commentId = event.target.dataset.commentId; // 클릭된 게시글의 ID 가져오기
   deleteComment(commentId);
   commentModal.classList.add("hidden");
-  window.location.href = `boardinfo.html?postId=${postId}`;
+  window.location.href = `../html/boardinfo.html?postId=${postId}`;
 });
 
 commentCancleButton.addEventListener("click", () => {
@@ -166,16 +218,13 @@ commentCancleButton.addEventListener("click", () => {
 
 async function deletePost() {
   const url = cv.postsURL + `/${postId}`;
-  try {
-    const response = await fetch(url, {
-      method: "DELETE",
-    });
-    if (!response.ok) {
-      throw new Error("Failed to delete post");
-    }
-  } catch (error) {
-    console.error("Error deleting post:", error.message);
+  const response = await fetch(url, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to delete post");
   }
+  console.log(response);
 }
 
 async function addComment(comment) {
@@ -196,8 +245,9 @@ async function addComment(comment) {
   if (!response.ok) {
     throw new Error("Failed to add comment");
   }
-  const responseData = await response.json();
-  console.log("New comment added:", responseData);
+  console.log(response);
+  // const responseData = await response.json();
+  // console.log("New comment added:", responseData);
 }
 
 async function modifyComment(comment, tempCommentId) {
@@ -216,20 +266,18 @@ async function modifyComment(comment, tempCommentId) {
   if (!response.ok) {
     throw new Error("Failed to modify comment");
   }
+  console.log(response);
 }
 
 async function deleteComment(commentId) {
   const url = cv.postsURL + `/${postId}/${commentId}`;
-  try {
-    const response = await fetch(url, {
-      method: "DELETE",
-    });
-    if (!response.ok) {
-      throw new Error("Failed to delete comment");
-    }
-  } catch (error) {
-    console.error("Error deleting comment:", error.message);
+  const response = await fetch(url, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to delete comment");
   }
+  console.log(response);
 }
 
 function commentButtonValid() {
@@ -245,15 +293,15 @@ function commentButtonValid() {
 
 //회원정보 수정 이벤트
 cv.modifyUserinfoButton.addEventListener("click", () => {
-  window.location.href = "userinfo.html";
+  window.location.href = "../html/userinfo.html";
 });
 
 cv.modifyPasswordButton.addEventListener("click", () => {
-  window.location.href = "password.html";
+  window.location.href = "../html/password.html";
 });
 
 cv.logoutButton.addEventListener("click", () => {
-  window.location.href = "login.html";
+  window.location.href = "../html/login.html";
 });
 
 cv.profileImageButton.addEventListener("click", () => {

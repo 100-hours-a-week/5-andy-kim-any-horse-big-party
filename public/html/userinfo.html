@@ -14,9 +14,10 @@
             <img id="profile-image" class="image" src="../images/profile_img.webp"/>
         </article>
         <p class="signup-header">회원정보수정</p>
-        <form id="userinfo-form" class="container-signup">
+        <form id="userinfo-form" class="container-signup" encType="multipart/form-data">
             <description class="name">프로필 사진</description>
-            <img class="image" src="../images/photo//photo_1.jpeg"/>
+            <img id="image" class="image" src="../images/photo/photo_1.jpeg"/>
+            <input type="file" id ="imageUpload" accept="image/*">
             <description class="name">이메일</description>
             <description id="mail-address">skyladder8895text.com</description>
             <description class="name">닉네임</description>

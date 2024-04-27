@@ -18,6 +18,10 @@ let passwordValid = false;
 let verifyValid = false;
 let nicknameValid = false;
 
+const imageInput = document.getElementById("imageUpload");
+const userinfoImage = document.getElementById("image-temp");
+let selectedFile = null;
+
 signupButton.disabled = true;
 
 emailInput.addEventListener("focusout", () => {
@@ -128,24 +132,34 @@ function isValidNickname(nickname) {
   const nicknameRegex = /^\S*$/;
   return nicknameRegex.test(nickname);
 }
+// 이미지 업로드 이벤트
+
+imageInput.addEventListener("change", () => {
+  selectedFile = imageInput.files[0];
+  const fileReader = new FileReader();
+
+  fileReader.readAsDataURL(selectedFile);
+  fileReader.onload = function () {
+    userinfoImage.src = fileReader.result;
+  };
+});
 
 signupForm.addEventListener("submit", function (event) {
   const email = emailInput.value;
   const password = passwordInput.value;
   const nickname = nicknameInput.value;
-  const imagePath = document.getElementById("temp-image");
 
   event.preventDefault(); // 폼 제출 중지
-  addUser(email, password, imagePath, nickname);
-  window.location.href = `board.html`;
+  addUser(email, password, selectedFile, nickname);
+  window.location.href = `../html/login.html`;
 });
 
 loginButton.addEventListener(`click`, (event) => {
   event.preventDefault(); // 폼 제출 중지
-  window.location.href = `login.html`;
+  window.location.href = `../html/login.html`;
 });
 
-async function addUser(email, password, imagePath, nickname) {
+async function addUser(email, password, imageFile, nickname) {
   const url = cv.usersURL + `/signup`;
   try {
     // 새로운 사용자 객체 생성
@@ -154,7 +168,6 @@ async function addUser(email, password, imagePath, nickname) {
       email: email,
       password: password,
       nickname: nickname,
-      profileImagePath: imagePath,
     };
     // 서버에 새로운 사용자 정보 추가하기
     const response = await fetch(url, {
@@ -164,12 +177,25 @@ async function addUser(email, password, imagePath, nickname) {
       },
       body: JSON.stringify(newUser),
     });
-
     if (!response.ok) {
       throw new Error("Failed to add user");
     }
-    const responseData = await response.json();
-    console.log("New user added:", responseData);
+    const jsonData = await response.json();
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("image", imageFile);
+      const imageResponse = await fetch(
+        cv.usersURL + `/${jsonData.data.id}/image`,
+        {
+          method: "PATCH",
+          body: formData,
+        }
+      );
+      if (!imageResponse.ok) {
+        throw new Error("Failed to upload image");
+      }
+    }
+    console.log("New user added:", jsonData);
   } catch (error) {
     console.error("Error adding user:", error.message);
   }

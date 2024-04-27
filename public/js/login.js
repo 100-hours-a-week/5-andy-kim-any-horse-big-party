@@ -4,6 +4,8 @@ const loginButton = document.getElementById("login-button");
 const signupButton = document.getElementById("signup-button");
 const loginForm = document.getElementById("loginForm");
 
+window.onload = function () {};
+
 loginForm.addEventListener("submit", function (event) {
   event.preventDefault(); // 폼 제출 중지
   const email = document.getElementById("email-textbox").value;
@@ -12,14 +14,13 @@ loginForm.addEventListener("submit", function (event) {
   fetch(cv.usersURL)
     .then((response) => response.json())
     .then((data) => {
+      console.log(data);
       const user = data.find(
         (user) => user.email === email && user.password === password
       );
       if (user) {
         loginButton.style.backgroundColor = "#7f6aee";
-        setTimeout(() => {
-          window.location.href = "board.html";
-        }, 3000);
+        window.location.href = "../html/board.html";
       } else {
         showToast();
       }
@@ -27,7 +28,7 @@ loginForm.addEventListener("submit", function (event) {
 });
 
 signupButton.addEventListener("click", () => {
-  window.location.href = "signup.html";
+  window.location.href = "../html/signup.html";
 });
 
 function showToast() {
