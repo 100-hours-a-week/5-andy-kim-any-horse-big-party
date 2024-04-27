@@ -1,0 +1,111 @@
+[
+  {
+    "id": 1,
+    "email": "123",
+    "password": "123",
+    "nickname": "임시 사용자",
+    "profileImagePath": "public/images/users/user1image.jpg"
+  },
+  {
+    "id": 2,
+    "email": "skyladder8895@gmail.com",
+    "password": "asd123A!",
+    "nickname": "1",
+    "profileImagePath": "public/images/users/user1image.jpg"
+  },
+  {
+    "id": 3,
+    "email": "andy@test.kr",
+    "password": "andy1234",
+    "nickname": "andy",
+    "profileImagePath": "public/images/user1image.jpg"
+  },
+  {
+    "id": 4,
+    "email": "void@test.kr",
+    "password": "void1234",
+    "nickname": "void",
+    "profileImagePath": null
+  },
+  {
+    "id": 5,
+    "email": "skyladder8895@gmail.co123",
+    "password": "asd123A!",
+    "nickname": "asdsaf",
+    "profileImagePath": null
+  },
+  {
+    "id": 6,
+    "email": "skyladder8895@gmail.co123",
+    "password": "asd123A!",
+    "nickname": "asdsaf",
+    "profileImagePath": null
+  },
+  {
+    "id": 7,
+    "email": "skyladder8895@gmail.co123",
+    "password": "asd123A!",
+    "nickname": "asdsaf",
+    "profileImagePath": null
+  },
+  {
+    "id": 8,
+    "email": "skyladder8895@gmail.co123",
+    "password": "asd123A!",
+    "nickname": "asdsaf",
+    "profileImagePath": null
+  },
+  {
+    "id": 9,
+    "email": "123@123",
+    "password": "123",
+    "nickname": "test",
+    "profileImagePath": null
+  },
+  {
+    "id": 10,
+    "email": "skyladder8895@gmail.com12356",
+    "password": "asd123A!",
+    "nickname": "temp",
+    "profileImagePath": null
+  },
+  {
+    "id": 11,
+    "email": "skyladder8895@gmail.com12345",
+    "password": "asd123A!",
+    "nickname": "temp11",
+    "profileImagePath": null
+  },
+  {
+    "id": 12,
+    "email": "skyladder8895@gmail.com123456",
+    "password": "asd123A!",
+    "nickname": "temp_nick",
+    "profileImagePath": null
+  },
+  {
+    "id": 13,
+    "email": "123@1234.com",
+    "password": "asd123A!",
+    "nickname": "2134."
+  },
+  {
+    "id": 14,
+    "email": "123@1234.com5",
+    "password": "asd123A!",
+    "nickname": "asdasd"
+  },
+  {
+    "id": 15,
+    "email": "123@1234.com2",
+    "password": "asd123A!",
+    "nickname": "111111"
+  },
+  {
+    "id": 16,
+    "email": "123@1234.com1",
+    "password": "asd123A!",
+    "nickname": "111111111",
+    "profileImagePath": "public/images/users/user16image.jpg"
+  }
+]
