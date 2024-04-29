@@ -1,22 +1,36 @@
-import express from "express";
-import cors from "cors";
-import bodyParser from "body-parser";
-import userRoutes from "./routes/userRoutes.js";
-import postRoutes from "./routes/postRoutes.js";
-
-import * as Sentry from "@sentry/node";
-import { nodeProfilingIntegration } from "@sentry/profiling-node";
+const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const bodyParser = require("body-parser");
+const userRoutes = require("./routes/userRoutes.js");
+const postRoutes = require("./routes/postRoutes.js");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const Sentry = require("@sentry/node");
+const { nodeProfilingIntegration } = require("@sentry/profiling-node");
+
 app.use(express.static("public"));
 app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(
+  session({
+    secret: "secretkey",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 3 * 60 * 60 * 1000, // 3 hours
+    },
+  })
+);
 
 app.use(
   cors({
-    // origin: "http://localhost:4000",
-    origin: "*",
+    origin: "http://localhost:4000",
+    // origin: "*",
+    credentials: true,
   })
 );
 app.use("/users", userRoutes);

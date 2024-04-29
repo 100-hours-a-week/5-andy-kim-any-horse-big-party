@@ -1,6 +1,6 @@
-import express from "express";
-import * as postController from "../controllers/postController.js";
-import multer from "multer";
+const express = require("express");
+const postController = require("../controllers/postController.js");
+const multer = require("multer");
 
 const router = express.Router();
 const multerStorage = multer.memoryStorage();
@@ -20,4 +20,4 @@ router.patch(
 );
 router.patch("/:postId/:commentId", postController.patchComment);
 
-export default router;
+module.exports = router;

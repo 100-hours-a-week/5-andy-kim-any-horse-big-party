@@ -12,13 +12,19 @@ let verifyValid = false;
 const passwordHelperText = document.getElementById("password-helper-text");
 const verifyHelperText = document.getElementById("verify-helper-text");
 
-const userId = 1;
+let nowUserId = 1;
 
 const profileImage = document.getElementById("profile-image");
 // 페이지 로딩 이벤트
-window.onload = function () {
+window.onload = async function () {
   passwordModifyButton.disabled = false;
-  const nowUserId = 1;
+  nowUserId = await fetch(cv.usersURL + `/currentUserId`, {
+    credentials: "include",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data.userId;
+    });
 
   fetch(cv.usersURL + `/${nowUserId}/image`, {
     method: "GET",
@@ -58,7 +64,7 @@ function isValidPassword(password) {
 
 // modifyPassword
 async function modifyPassword(password) {
-  const url = cv.usersURL + `/${userId}`;
+  const url = cv.usersURL + `/${nowUserId}`;
   const modifyUser = {
     password: password,
   };
@@ -131,6 +137,7 @@ cv.modifyPasswordButton.addEventListener("click", () => {
 });
 
 cv.logoutButton.addEventListener("click", () => {
+  fetch(cv.usersURL + `/logout`);
   window.location.href = "../html/login.html";
 });
 

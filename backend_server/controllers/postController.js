@@ -1,11 +1,11 @@
-import * as postModel from "../models/postModel.js";
+const postModel = require("../models/postModel.js");
 
-export function getPosts(req, res) {
+function getPosts(req, res) {
   const data = postModel.getPosts();
   res.status(200).json(data);
 }
 
-export function getImage(req, res) {
+function getImage(req, res) {
   const posts = postModel.getPosts();
   const postId = parseInt(req.params.postId);
   const imageFilePath = posts[postId - 1].attachFilePath;
@@ -28,13 +28,13 @@ export function getImage(req, res) {
   }
 }
 
-export async function writePost(req, res) {
+async function writePost(req, res) {
   const newPost = req.body;
   const modifyPost = await postModel.addPost(newPost);
   res.status(201).json({ message: "add_post_success", data: modifyPost });
 }
 
-export function writeComment(req, res) {
+function writeComment(req, res) {
   const postId = req.params.postId;
   const newComment = req.body;
 
@@ -42,14 +42,14 @@ export function writeComment(req, res) {
   res.status(201).json({ message: "add_comment_success", data: newComment });
 }
 
-export function erasePost(req, res) {
+function erasePost(req, res) {
   const postId = req.params.postId;
 
   postModel.deletePost(postId);
   res.status(200).json({ message: "erase_post_success", data: null });
 }
 
-export function eraseComment(req, res) {
+function eraseComment(req, res) {
   const postId = req.params.postId;
   const commentId = req.params.commentId;
 
@@ -57,14 +57,14 @@ export function eraseComment(req, res) {
   res.status(200).json({ message: "erase_comment_success", data: null });
 }
 
-export function patchPost(req, res) {
+function patchPost(req, res) {
   const postId = parseInt(req.params.postId);
   const modifyData = req.body;
   const modifyPost = postModel.modifyPost(postId, modifyData);
   res.status(201).json({ message: "modify_post_success", data: modifyPost });
 }
 
-export function patchComment(req, res) {
+function patchComment(req, res) {
   const postId = parseInt(req.params.postId);
   const commentId = parseInt(req.params.commentId);
   const modifyData = req.body;
@@ -73,7 +73,7 @@ export function patchComment(req, res) {
   res.status(201).json({ message: "modify_comment_success", data: modifyData });
 }
 
-export function patchImage(req, res) {
+function patchImage(req, res) {
   const postId = parseInt(req.params.postId);
   const imageFile = req.file;
 
@@ -84,3 +84,15 @@ export function patchImage(req, res) {
     res.status(400).json({ message: "no file", data: null });
   }
 }
+
+module.exports = {
+  getPosts,
+  getImage,
+  writePost,
+  writeComment,
+  erasePost,
+  eraseComment,
+  patchPost,
+  patchComment,
+  patchImage,
+};

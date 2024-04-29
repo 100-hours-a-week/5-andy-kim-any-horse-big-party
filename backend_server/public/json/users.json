@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "email": "123",
+    "email": "123@123",
     "password": "123",
     "nickname": "임시 사용자",
     "profileImagePath": "public/images/users/user1image.jpg"
@@ -9,9 +9,9 @@
   {
     "id": 2,
     "email": "skyladder8895@gmail.com",
-    "password": "asd123A!",
-    "nickname": "1",
-    "profileImagePath": "public/images/users/user1image.jpg"
+    "password": "asd123A!!",
+    "nickname": "andy",
+    "profileImagePath": "public/images/users/user2image.jpg"
   },
   {
     "id": 3,

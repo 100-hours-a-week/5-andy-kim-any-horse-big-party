@@ -1,4 +1,4 @@
-import fs from "fs";
+const fs = require("fs");
 
 const postsPath = "public/json/posts.json";
 const uploadPath = "public/images/posts";
@@ -9,17 +9,17 @@ function getIndexFromId(json, id) {
   return index;
 }
 
-export function getPosts() {
+function getPosts() {
   const postsString = fs.readFileSync(postsPath, "utf8");
   return JSON.parse(postsString);
 }
 
-export function getImage(imageFilePath) {
+function getImage(imageFilePath) {
   if (imageFilePath) return fs.readFileSync(imageFilePath);
   return null;
 }
 
-export async function addPost(newPost) {
+async function addPost(newPost) {
   const posts = await getPosts();
   const lastPostId = posts.length > 0 ? posts.length : 0;
 
@@ -29,7 +29,7 @@ export async function addPost(newPost) {
   return newPost;
 }
 
-export async function addComment(postId, newComment) {
+async function addComment(postId, newComment) {
   const posts = await getPosts();
   const lastCommentId =
     posts[postId - 1].comments.length > 0
@@ -41,7 +41,7 @@ export async function addComment(postId, newComment) {
   fs.writeFileSync(postsPath, JSON.stringify(posts), "utf8");
 }
 
-export async function addImage(postId, imageFile) {
+async function addImage(postId, imageFile) {
   const imageFilePath = uploadPath + `/post${postId}image.jpg`;
   const posts = await getPosts();
 
@@ -50,16 +50,16 @@ export async function addImage(postId, imageFile) {
   fs.writeFileSync(imageFilePath, imageFile.buffer);
 }
 
-export function getTempImage() {
+function getTempImage() {
   return fs.readFileSync(tempImagePath);
 }
 
-export async function deletePost(postId) {
+async function deletePost(postId) {
   const posts = await getPosts();
   const index = getIndexFromId(posts, postId);
 
   if (index == -1) {
-    `Post with ID ${postId} not found.`;
+    console.log(`Post with ID ${postId} not found.`);
     return;
   }
   posts.splice(index, 1);
@@ -70,12 +70,12 @@ export async function deletePost(postId) {
   return posts;
 }
 
-export async function deleteComment(postId, commentId) {
+async function deleteComment(postId, commentId) {
   const posts = await getPosts();
   const index = getIndexFromId(posts[postId - 1].comments, commentId);
 
   if (index == -1) {
-    `Comment with ID ${commentId} not found.`;
+    console.log(`Comment with ID ${commentId} not found.`);
     return;
   }
   posts[postId - 1].comments.splice(index, 1);
@@ -86,7 +86,7 @@ export async function deleteComment(postId, commentId) {
   return posts[postId - 1].comments;
 }
 
-export async function modifyPost(postId, modifyData) {
+async function modifyPost(postId, modifyData) {
   const posts = await getPosts();
 
   posts[postId - 1].title = modifyData.title;
@@ -96,7 +96,7 @@ export async function modifyPost(postId, modifyData) {
   return posts[postId - 1];
 }
 
-export async function modifyComment(postId, commentId, modifyData) {
+async function modifyComment(postId, commentId, modifyData) {
   const posts = await getPosts();
 
   posts[postId - 1].comments[commentId - 1].body = modifyData.body;
@@ -104,3 +104,16 @@ export async function modifyComment(postId, commentId, modifyData) {
   fs.writeFileSync(postsPath, JSON.stringify(posts), "utf8");
   return posts[postId - 1].comments[commentId - 1];
 }
+
+module.exports = {
+  getPosts,
+  getImage,
+  addPost,
+  addComment,
+  addImage,
+  getTempImage,
+  deletePost,
+  deleteComment,
+  modifyPost,
+  modifyComment,
+};

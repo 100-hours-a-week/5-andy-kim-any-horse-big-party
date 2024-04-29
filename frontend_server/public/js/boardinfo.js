@@ -37,8 +37,16 @@ const imageBox = document.getElementById("image-box");
 
 let commentValid = false;
 
+let nowUserId = 0;
 // 페이지 로딩 이벤트
 window.onload = function () {
+  nowUserId = fetch(cv.usersURL + `/currentUserId`, {
+    credentials: "include",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data.userId;
+    });
   renderBoardinfo();
 };
 
@@ -47,7 +55,13 @@ async function renderBoardinfo() {
   const posts = await utils.fetchData(cv.postsURL);
   const post = posts[postId - 1];
   const comments = post.comments;
-  const nowUserId = 1;
+  const nowUserId = await fetch(cv.usersURL + `/currentUserId`, {
+    credentials: "include",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data.userId;
+    });
 
   await fetch(cv.usersURL + `/${nowUserId}/image`, {
     method: "GET",
@@ -301,6 +315,7 @@ cv.modifyPasswordButton.addEventListener("click", () => {
 });
 
 cv.logoutButton.addEventListener("click", () => {
+  fetch(cv.usersURL + `/logout`);
   window.location.href = "../html/login.html";
 });
 

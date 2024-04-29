@@ -13,12 +13,20 @@ const imageInput = document.getElementById("imageUpload");
 let titleValid = false;
 let bodyValid = false;
 
+let nowUserId = 0;
+
 addPostButton.disabled = true;
 let selectedFile = null;
 // 페이지 로딩 이벤트
 
-window.onload = function () {
-  const nowUserId = 1;
+window.onload = async function () {
+  nowUserId = await fetch(cv.usersURL + `/currentUserId`, {
+    credentials: "include",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data.userId;
+    });
 
   fetch(cv.usersURL + `/${nowUserId}/image`, {
     method: "GET",
@@ -74,7 +82,7 @@ addPostForm.addEventListener("submit", function (event) {
 async function addPost(title, mainText, imageFile) {
   const modifyPost = {
     id: 0,
-    userId: 7,
+    userId: nowUserId,
     title: title,
     body: mainText,
     attachFilePath: null,
@@ -133,6 +141,7 @@ cv.modifyPasswordButton.addEventListener("click", () => {
 });
 
 cv.logoutButton.addEventListener("click", () => {
+  fetch(cv.usersURL + `/logout`);
   window.location.href = "../html/login.html";
 });
 

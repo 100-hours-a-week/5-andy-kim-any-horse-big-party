@@ -33,6 +33,7 @@ function createPostArticle(post) {
   image.classList.add("image");
   fetch(cv.usersURL + `/${post.userId}/image`, {
     method: "GET",
+    credentials: "include",
   })
     .then((response) => {
       console.log(response);
@@ -67,11 +68,18 @@ async function renderPostLists() {
 }
 
 // 페이지 로드 시 실행
-window.onload = function () {
-  const nowUserId = 1;
+window.onload = async function () {
+  const nowUserId = await fetch(cv.usersURL + `/currentUserId`, {
+    credentials: "include",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data.userId;
+    });
 
-  fetch(cv.usersURL + `/${nowUserId}/image`, {
+  await fetch(cv.usersURL + `/${nowUserId}/image`, {
     method: "GET",
+    credentials: "include",
   })
     .then((response) => {
       if (!response.ok) {
@@ -112,6 +120,11 @@ cv.modifyPasswordButton.addEventListener("click", () => {
 });
 
 cv.logoutButton.addEventListener("click", () => {
+  fetch(cv.usersURL + `/logout`, {
+    credentials: "include",
+  }).then((response) => {
+    console.log(response.text());
+  });
   window.location.href = "../html/login.html";
 });
 

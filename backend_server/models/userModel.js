@@ -1,4 +1,4 @@
-import fs from "fs";
+const fs = require("fs");
 
 const usersPath = "public/json/users.json";
 const uploadPath = "public/images/users";
@@ -9,21 +9,21 @@ function getIndexFromId(json, id) {
   return index;
 }
 
-export function getUsers() {
+function getUsers() {
   const usersString = fs.readFileSync(usersPath, "utf8");
   return JSON.parse(usersString);
 }
 
-export function getImage(imageFilePath) {
+function getImage(imageFilePath) {
   if (imageFilePath) return fs.readFileSync(imageFilePath);
   return null;
 }
 
-export function getTempImage() {
+function getTempImage() {
   return fs.readFileSync(tempImagePath);
 }
 
-export async function addUser(newUser) {
+async function addUser(newUser) {
   const users = await getUsers();
   const lastUserId = users.length > 0 ? users[users.length - 1].id : 0;
   newUser.id = lastUserId + 1;
@@ -32,7 +32,7 @@ export async function addUser(newUser) {
   return newUser;
 }
 
-export async function addImage(userId, imageFile) {
+async function addImage(userId, imageFile) {
   const imageFilePath = uploadPath + `/user${userId}image.jpg`;
   const users = await getUsers();
 
@@ -41,7 +41,7 @@ export async function addImage(userId, imageFile) {
   fs.writeFileSync(imageFilePath, imageFile.buffer);
 }
 
-export async function deleteUser(userId) {
+async function deleteUser(userId) {
   const users = await getUsers();
   const index = getIndexFromId(users, userId);
 
@@ -57,7 +57,7 @@ export async function deleteUser(userId) {
   return users;
 }
 
-export async function modifyUser(userId, modifyData) {
+async function modifyUser(userId, modifyData) {
   const users = await getUsers();
   const modifyNickname = modifyData.nickname;
   const modifyPassword = modifyData.password;
@@ -72,3 +72,13 @@ export async function modifyUser(userId, modifyData) {
   fs.writeFileSync(usersPath, JSON.stringify(users), "utf8");
   return users[userId - 1];
 }
+
+module.exports = {
+  getUsers,
+  getImage,
+  getTempImage,
+  addUser,
+  addImage,
+  deleteUser,
+  modifyUser,
+};

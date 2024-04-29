@@ -15,19 +15,26 @@ const userinfoImage = document.getElementById("image");
 const userinfoModifyButton = document.getElementById("userinfo-modify-button");
 const userMail = document.getElementById("mail-address");
 const nicknameInput = document.getElementById("nickname-textbox");
-const userId = 1;
+let nowUserId = 1;
 
 let selectedFile = null;
 
 let nicknameValid = true;
 
 //페이지 로딩 이벤트
-window.onload = function () {
+window.onload = async function () {
   userinfoModifyButton.disabled = false;
-  const nowUserId = 1;
-
+  nowUserId = await fetch(cv.usersURL + `/currentUserId`, {
+    credentials: "include",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data.userId;
+    });
+  console.log(nowUserId);
   fetch(cv.usersURL + `/${nowUserId}/image`, {
     method: "GET",
+    credentials: "include",
   })
     .then((response) => {
       if (!response.ok) {
@@ -47,10 +54,10 @@ window.onload = function () {
 
 // 회원 탈퇴 이벤트
 modalAcceptButton.addEventListener("click", () => {
-  alert("해당 기능은 현재 지원하지 않습니다.");
-  window.location.href = "../html/userinfo.html";
-  // deleteUser();
-  // window.location.href = "../html/login.html";
+  // alert("해당 기능은 현재 지원하지 않습니다.");
+  // window.location.href = "../html/userinfo.html";
+  deleteUser();
+  window.location.href = "../html/login.html";
 });
 
 modalCancleButton.addEventListener("click", () => {
@@ -63,7 +70,7 @@ deleteUserButton.addEventListener("click", () => {
 
 // modifyUserinfo
 async function modifyUserinfo(nickname, imageFile) {
-  const url = cv.usersURL + `/${userId}`;
+  const url = cv.usersURL + `/${nowUserId}`;
   // try {
   const modifyUser = {
     nickname: nickname,
@@ -74,6 +81,7 @@ async function modifyUserinfo(nickname, imageFile) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(modifyUser),
+    credentials: "include",
   });
   if (!nicknameResponse.ok) {
     throw new Error("Failed to modify comment");
@@ -84,6 +92,7 @@ async function modifyUserinfo(nickname, imageFile) {
     const imageResponse = await fetch(url + `/image`, {
       method: "PATCH",
       body: formData,
+      credentials: "include",
     });
     if (!imageResponse.ok) {
       throw new Error("Failed to upload image");
@@ -93,9 +102,10 @@ async function modifyUserinfo(nickname, imageFile) {
 
 // deleteUser
 async function deleteUser() {
-  const url = cv.usersURL + `/${userId}`;
+  const url = cv.usersURL + `/${nowUserId}`;
   const response = await fetch(url, {
     method: "DELETE",
+    credentials: "include",
   });
   if (!response.ok) {
     throw new Error("Failed to modify comment");
@@ -116,15 +126,16 @@ function modifyButtonValid() {
 
 // renderUserinfo
 async function renderUserinfo() {
-  const url = cv.usersURL + `/${userId}/image`;
+  const url = cv.usersURL + `/${nowUserId}/image`;
   const users = await utils.fetchData(cv.usersURL);
-  const user = users[userId - 1];
+  const user = users[nowUserId - 1];
 
   nicknameInput.value = user.nickname;
   userMail.textContent = user.email;
 
   await fetch(url, {
     method: "GET",
+    credentials: "include",
   })
     .then((response) => {
       if (!response.ok) {
@@ -190,6 +201,7 @@ cv.modifyPasswordButton.addEventListener("click", () => {
 });
 
 cv.logoutButton.addEventListener("click", () => {
+  fetch(cv.usersURL + `/logout`);
   window.location.href = "../html/login.html";
 });
 
