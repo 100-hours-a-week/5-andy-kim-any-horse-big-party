@@ -1,6 +1,7 @@
 const express = require("express");
 const postController = require("../controllers/postController.js");
 const multer = require("multer");
+const auth = require("./auth.js");
 
 const router = express.Router();
 const multerStorage = multer.memoryStorage();
@@ -10,14 +11,23 @@ router.get("", postController.getPosts);
 router.get("/:postId/image", postController.getImage);
 router.post("", postController.writePost);
 router.post("/:postId/comments", postController.writeComment);
-router.delete("/:postId", postController.erasePost);
-router.delete("/:postId/:commentId", postController.eraseComment);
-router.patch("/:postId", postController.patchPost);
+router.delete("/:postId", auth.authPost, postController.erasePost);
+router.delete(
+  "/:postId/:commentId",
+  auth.authComment,
+  postController.eraseComment
+);
+router.patch("/:postId", auth.authPost, postController.patchPost);
 router.patch(
   "/:postId/image",
+  auth.authPost,
   upload.single("image"),
   postController.patchImage
 );
-router.patch("/:postId/:commentId", postController.patchComment);
+router.patch(
+  "/:postId/:commentId",
+  auth.authComment,
+  postController.patchComment
+);
 
 module.exports = router;

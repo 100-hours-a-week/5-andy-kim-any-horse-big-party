@@ -5,6 +5,7 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes.js");
 const postRoutes = require("./routes/postRoutes.js");
+const auth = require("./routes/auth.js");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -33,8 +34,9 @@ app.use(
     credentials: true,
   })
 );
+app.use("/protected", auth.checkAuth);
 app.use("/users", userRoutes);
-app.use("/posts", postRoutes);
+app.use("/posts", auth.authenticate, postRoutes);
 
 Sentry.init({
   dsn: "https://06839f6854cc93b834ea9b3bbf813749@o4507145817489408.ingest.de.sentry.io/4507145818800208",

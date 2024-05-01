@@ -8,7 +8,6 @@ function getUsers(req, res) {
 
 function getCurrentUserId(req, res) {
   const userId = req.session.userId; // 세션에서 사용자 ID 가져오기
-  console.log(req.session);
   res.status(200).json({ userId });
 }
 

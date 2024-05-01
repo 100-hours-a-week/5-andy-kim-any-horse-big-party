@@ -3,6 +3,7 @@ import utils from "./utils.js";
 
 const writeboardButton = document.getElementById("writeboard-button");
 const profileImage = document.getElementById("profile-image");
+const loading_page = document.getElementById("load");
 
 const maxLength = 26; // 최대 길이
 
@@ -36,7 +37,6 @@ function createPostArticle(post) {
     credentials: "include",
   })
     .then((response) => {
-      console.log(response);
       return response.blob(); // 이미지 데이터를 Blob 형식으로 변환
     })
     .then((blob) => {
@@ -69,10 +69,14 @@ async function renderPostLists() {
 
 // 페이지 로드 시 실행
 window.onload = async function () {
+  loading_page.style.display = "none";
+  await utils.checkAuth();
   const nowUserId = await fetch(cv.usersURL + `/currentUserId`, {
     credentials: "include",
   })
-    .then((response) => response.json())
+    .then((response) => {
+      return response.json();
+    })
     .then((data) => {
       return data.userId;
     });
@@ -83,16 +87,17 @@ window.onload = async function () {
   })
     .then((response) => {
       if (!response.ok) {
-        console.log("fetch error");
+        throw new Error("게시판 페이지 열람 권한이 없습니다."); // 401 에러 발생 시 에러 throw
       }
-      console.log(response);
       return response.blob(); // 이미지 데이터를 Blob 형식으로 변환
     })
     .then((blob) => {
-      console.log(blob);
       const imageUrl = URL.createObjectURL(blob); // Blob URL 생성
-      console.log(imageUrl);
       profileImage.src = imageUrl; // 이미지의 src 속성에 Blob URL 설정
+    })
+    .catch((error) => {
+      alert(error);
+      window.location.href = `../html/login.html`;
     });
   renderPostLists();
 };
@@ -122,10 +127,9 @@ cv.modifyPasswordButton.addEventListener("click", () => {
 cv.logoutButton.addEventListener("click", () => {
   fetch(cv.usersURL + `/logout`, {
     credentials: "include",
-  }).then((response) => {
-    console.log(response.text());
+  }).then(() => {
+    window.location.href = "../html/login.html";
   });
-  window.location.href = "../html/login.html";
 });
 
 cv.profileImageButton.addEventListener("click", () => {

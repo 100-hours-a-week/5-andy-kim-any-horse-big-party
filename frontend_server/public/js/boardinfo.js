@@ -35,18 +35,14 @@ let tempCommentId = -1;
 const commentInput = document.getElementById("textbox");
 const imageBox = document.getElementById("image-box");
 
-let commentValid = false;
+const loading_page = document.getElementById("load");
 
+let commentValid = false;
 let nowUserId = 0;
 // 페이지 로딩 이벤트
-window.onload = function () {
-  nowUserId = fetch(cv.usersURL + `/currentUserId`, {
-    credentials: "include",
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      return data.userId;
-    });
+window.onload = async function () {
+  loading_page.style.display = "none";
+  await utils.checkAuth();
   renderBoardinfo();
 };
 
@@ -55,7 +51,8 @@ async function renderBoardinfo() {
   const posts = await utils.fetchData(cv.postsURL);
   const post = posts[postId - 1];
   const comments = post.comments;
-  const nowUserId = await fetch(cv.usersURL + `/currentUserId`, {
+
+  nowUserId = await fetch(cv.usersURL + `/currentUserId`, {
     credentials: "include",
   })
     .then((response) => response.json())
@@ -65,6 +62,7 @@ async function renderBoardinfo() {
 
   await fetch(cv.usersURL + `/${nowUserId}/image`, {
     method: "GET",
+    credentials: "include",
   })
     .then((response) => {
       if (!response.ok) {
@@ -80,6 +78,10 @@ async function renderBoardinfo() {
       profileImage.src = imageUrl; // 이미지의 src 속성에 Blob URL 설정
     });
 
+  if (nowUserId != post.userId) {
+    postModifyButton.style.display = "none";
+    postDeleteButton.style.display = "none";
+  }
   renderPost(post);
 
   commentInput.addEventListener("focusout", () => {
@@ -105,6 +107,7 @@ commentForm.addEventListener("submit", (event) => {
 async function renderPost(post) {
   await fetch(cv.usersURL + `/${post.userId}/image`, {
     method: "GET",
+    credentials: "include",
   })
     .then((response) => {
       if (!response.ok) {
@@ -124,6 +127,7 @@ async function renderPost(post) {
   postDate.textContent = post.date;
   await fetch(cv.postsURL + `/${postId}/image`, {
     method: "GET",
+    credentials: "include",
   })
     .then((response) => {
       if (!response.ok) {
@@ -133,7 +137,6 @@ async function renderPost(post) {
       return response.blob(); // 이미지 데이터를 Blob 형식으로 변환
     })
     .then((blob) => {
-      console.log(blob);
       const imageUrl = URL.createObjectURL(blob); // Blob URL 생성
       console.log(imageUrl);
       imageBox.src = imageUrl; // 이미지의 src 속성에 Blob URL 설정
@@ -144,7 +147,7 @@ async function renderPost(post) {
   commentPostButton.disabled = true;
 }
 
-function renderComment(comment) {
+async function renderComment(comment) {
   const wrap = document.createElement("wrap");
   const article = document.createElement("article");
   const image = document.createElement("img");
@@ -153,28 +156,47 @@ function renderComment(comment) {
   const body = document.createElement("p");
   const modifyButton = document.createElement("a");
   const deleteButton = document.createElement("a");
+  const users = await utils.fetchData(cv.usersURL);
 
   wrap.classList.add("comment-box");
   article.classList.add("writer");
   article.dataset.commentId = comment.id; // 데이터 세트 commentId를 추가
   image.classList.add("image");
-  image.src = "../images/profile_img.webp"; // 수정 요망
+  fetch(cv.usersURL + `/${comment.userId}/image`, {
+    credentials: "include",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        console.log("fetch error");
+      }
+      return response.blob(); // 이미지 데이터를 Blob 형식으로 변환
+    })
+    .then((blob) => {
+      const imageUrl = URL.createObjectURL(blob); // Blob URL 생성
+      image.src = imageUrl; // 이미지의 src 속성에 Blob URL 설정
+    });
   user.classList.add("user");
-  user.textContent = "더미 사용자 " + comment.userId;
+  user.textContent = users[comment.userId - 1].nickname;
   date.classList.add("date");
   date.textContent = comment.date;
   body.classList.add("comment");
-  modifyButton.classList.add("modify-button");
-  modifyButton.textContent = "수정";
-  deleteButton.classList.add("delete-button");
-  deleteButton.textContent = "삭제";
+  if (nowUserId == comment.userId) {
+    modifyButton.classList.add("modify-button");
+    modifyButton.id = `comment-modify-button`;
+    modifyButton.textContent = "수정";
+    deleteButton.classList.add("delete-button");
+    deleteButton.id = `comment-delete-button`;
+    deleteButton.textContent = "삭제";
+  }
   body.textContent = comment.body;
 
   article.appendChild(image);
   article.appendChild(user);
   article.appendChild(date);
-  article.appendChild(modifyButton);
-  article.appendChild(deleteButton);
+  if (nowUserId == comment.userId) {
+    article.appendChild(modifyButton);
+    article.appendChild(deleteButton);
+  }
   wrap.appendChild(article);
   wrap.appendChild(body);
   container.appendChild(wrap);
@@ -234,6 +256,7 @@ async function deletePost() {
   const url = cv.postsURL + `/${postId}`;
   const response = await fetch(url, {
     method: "DELETE",
+    credentials: "include",
   });
   if (!response.ok) {
     throw new Error("Failed to delete post");
@@ -245,7 +268,7 @@ async function addComment(comment) {
   const url = cv.postsURL + `/${postId}/comments`;
   const newComment = {
     id: 0,
-    userId: 7,
+    userId: nowUserId,
     body: comment,
     date: utils.getCurrentDateTime(),
   };
@@ -255,6 +278,7 @@ async function addComment(comment) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(newComment),
+    credentials: "include",
   });
   if (!response.ok) {
     throw new Error("Failed to add comment");
@@ -276,6 +300,7 @@ async function modifyComment(comment, tempCommentId) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(modifyComment),
+    credentials: "include",
   });
   if (!response.ok) {
     throw new Error("Failed to modify comment");
@@ -287,6 +312,7 @@ async function deleteComment(commentId) {
   const url = cv.postsURL + `/${postId}/${commentId}`;
   const response = await fetch(url, {
     method: "DELETE",
+    credentials: "include",
   });
   if (!response.ok) {
     throw new Error("Failed to delete comment");
@@ -315,7 +341,9 @@ cv.modifyPasswordButton.addEventListener("click", () => {
 });
 
 cv.logoutButton.addEventListener("click", () => {
-  fetch(cv.usersURL + `/logout`);
+  fetch(cv.usersURL + `/logout`, {
+    credentials: "include",
+  });
   window.location.href = "../html/login.html";
 });
 

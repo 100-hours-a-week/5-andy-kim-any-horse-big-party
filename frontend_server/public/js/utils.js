@@ -1,16 +1,16 @@
 async function fetchData(url) {
-  try {
-    const response = await fetch(url, {
-      credentials: "include",
+  const responseData = await fetch(url, {
+    credentials: "include",
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error("해당 페이지 열람 권한이 없습니다."); // 401 에러 발생 시 에러 throw
+      return response.json();
+    })
+    .catch((error) => {
+      alert(error);
+      window.location.href = `../html/login.html`;
     });
-    if (!response.ok) {
-      throw new Error("Failed to fetch data");
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
+  return responseData;
 }
 
 function getCurrentDateTime() {
@@ -25,7 +25,22 @@ function getCurrentDateTime() {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
+async function checkAuth() {
+  const responseData = await fetch(`http://localhost:3000/protected`, {
+    credentials: "include",
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error("해당 페이지 열람 권한이 없습니다!"); // 401 에러 발생 시 에러 throw
+    })
+    .catch((error) => {
+      alert(error);
+      window.location.href = `../html/login.html`;
+    });
+  return responseData;
+}
+
 export default {
   fetchData,
   getCurrentDateTime,
+  checkAuth,
 };

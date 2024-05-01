@@ -15,6 +15,7 @@ const userinfoImage = document.getElementById("image");
 const userinfoModifyButton = document.getElementById("userinfo-modify-button");
 const userMail = document.getElementById("mail-address");
 const nicknameInput = document.getElementById("nickname-textbox");
+const loading_page = document.getElementById("load");
 let nowUserId = 1;
 
 let selectedFile = null;
@@ -23,6 +24,8 @@ let nicknameValid = true;
 
 //페이지 로딩 이벤트
 window.onload = async function () {
+  loading_page.style.display = "none";
+  await utils.checkAuth();
   userinfoModifyButton.disabled = false;
   nowUserId = await fetch(cv.usersURL + `/currentUserId`, {
     credentials: "include",

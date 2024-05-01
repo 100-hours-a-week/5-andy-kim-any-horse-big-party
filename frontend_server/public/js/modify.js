@@ -11,6 +11,7 @@ const modifyFrom = document.getElementById("post-modify-form");
 const imageInput = document.getElementById("imageUpload");
 const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get("postId"); // URL에서 게시글 ID 가져오기
+const loading_page = document.getElementById("load");
 
 let titleValid = true;
 let bodyValid = true;
@@ -18,6 +19,8 @@ let selectedFile = null;
 
 // 페이지 로딩 이벤트
 window.onload = async function () {
+  loading_page.style.display = "none";
+  await utils.checkAuth();
   postModifyButton.disabled = false;
   const nowUserId = await fetch(cv.usersURL + `/currentUserId`, {
     credentials: "include",
@@ -29,6 +32,7 @@ window.onload = async function () {
 
   fetch(cv.usersURL + `/${nowUserId}/image`, {
     method: "GET",
+    credentials: "include",
   })
     .then((response) => {
       if (!response.ok) {
@@ -68,6 +72,7 @@ async function modifyPost(title, mainText, imageFile) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(modifyPost),
+    credentials: "include",
   });
   if (!response.ok) {
     throw new Error("Failed to modify comment");
@@ -78,6 +83,7 @@ async function modifyPost(title, mainText, imageFile) {
     const imageResponse = await fetch(cv.postsURL + `/${postId}/image`, {
       method: "PATCH",
       body: formData,
+      credentials: "include",
     });
     if (!imageResponse.ok) {
       throw new Error("Failed to upload image");

@@ -20,9 +20,14 @@ let nicknameValid = false;
 
 const imageInput = document.getElementById("imageUpload");
 const userinfoImage = document.getElementById("image-temp");
+const loading_page = document.getElementById("load");
 let selectedFile = null;
 
 signupButton.disabled = true;
+
+window.onload = function () {
+  loading_page.style.display = "none";
+};
 
 emailInput.addEventListener("focusout", () => {
   emailValid = false;

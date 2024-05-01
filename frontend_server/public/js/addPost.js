@@ -9,6 +9,7 @@ const mainTextInput = document.getElementById("body-textbox");
 const addPostButton = document.getElementById("add-post-button");
 const addPostForm = document.getElementById("post-add-form");
 const imageInput = document.getElementById("imageUpload");
+const loading_page = document.getElementById("load");
 
 let titleValid = false;
 let bodyValid = false;
@@ -20,6 +21,8 @@ let selectedFile = null;
 // 페이지 로딩 이벤트
 
 window.onload = async function () {
+  loading_page.style.display = "none";
+  await utils.checkAuth();
   nowUserId = await fetch(cv.usersURL + `/currentUserId`, {
     credentials: "include",
   })
@@ -29,7 +32,7 @@ window.onload = async function () {
     });
 
   fetch(cv.usersURL + `/${nowUserId}/image`, {
-    method: "GET",
+    credentials: "include",
   })
     .then((response) => {
       if (!response.ok) {
@@ -97,6 +100,7 @@ async function addPost(title, mainText, imageFile) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(modifyPost),
+    credentials: "include",
   });
   if (!response.ok) {
     throw new Error("Failed to modify comment");

@@ -1,4 +1,5 @@
 import cv from "./commonVariables.js";
+import utils from "./utils.js";
 
 // 비밀번호 변경
 const passwordFormContainer = document.getElementById("password-form");
@@ -15,8 +16,11 @@ const verifyHelperText = document.getElementById("verify-helper-text");
 let nowUserId = 1;
 
 const profileImage = document.getElementById("profile-image");
+const loading_page = document.getElementById("load");
 // 페이지 로딩 이벤트
 window.onload = async function () {
+  loading_page.style.display = "none";
+  await utils.checkAuth();
   passwordModifyButton.disabled = false;
   nowUserId = await fetch(cv.usersURL + `/currentUserId`, {
     credentials: "include",
@@ -28,6 +32,7 @@ window.onload = async function () {
 
   fetch(cv.usersURL + `/${nowUserId}/image`, {
     method: "GET",
+    credentials: "include",
   })
     .then((response) => {
       if (!response.ok) {
@@ -70,6 +75,7 @@ async function modifyPassword(password) {
   };
   const response = await fetch(url, {
     method: "PATCH",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

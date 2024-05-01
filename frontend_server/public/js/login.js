@@ -1,12 +1,15 @@
 import cv from "./commonVariables.js";
 
-const loginButton = document.getElementById("login-button");
 const signupButton = document.getElementById("signup-button");
 const loginForm = document.getElementById("loginForm");
 const emailInput = document.getElementById(`email-textbox`);
 const passwordInput = document.getElementById(`password-textbox`);
 
-window.onload = function () {};
+const loading_page = document.getElementById("load");
+
+window.onload = function () {
+  loading_page.style.display = "none";
+};
 
 loginForm.addEventListener("submit", function (event) {
   event.preventDefault(); // 폼 제출 중지
@@ -39,13 +42,6 @@ async function login(email, password) {
         showToast();
       }
     });
-  await fetch(cv.usersURL + `/currentUserId`)
-    .then((response) => response.json())
-    .then((data) => {
-      const nowUserId = data.userId;
-      // 이제 nowUserId를 사용하여 작업 수행
-      console.log(nowUserId);
-    });
 }
 
 signupButton.addEventListener("click", () => {
@@ -57,5 +53,5 @@ function showToast() {
 
   setTimeout(() => {
     cv.toastContainer.style.visibility = "hidden";
-  }, 1000); // 3초 후에 토스트 메시지가 사라집니다.
+  }, 1000); // 1초 후에 토스트 메시지가 사라집니다.
 }
