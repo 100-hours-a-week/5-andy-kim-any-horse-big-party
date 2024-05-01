@@ -58,8 +58,14 @@ body {
   font-family: "Pretendard", sans-serif;
 }
 
+#container-header {
+  width: 592px;
+  height: 75px;
+}
+
 #boardinfo-header {
-  margin-right: 430px;
+  position: absolute;
+  left: 40px;
   font-weight: 700;
   font-size: 24px;
   line-height: 31.2px;
@@ -145,6 +151,15 @@ body {
   line-height: 23.48px;
 }
 
+#post-modify-button {
+  position: absolute;
+  left: 440px;
+}
+#post-delete-button {
+  position: absolute;
+  left: 490px;
+}
+
 #comment-modify-button {
   position: absolute;
   left: 470px;
@@ -224,7 +239,7 @@ body {
 
 #textbox {
   width: 544px;
-  height: 94px;
+  height: 100px;
 
   background-color: #fff;
   padding: 20px;
@@ -253,8 +268,8 @@ body {
 }
 
 .comment {
-  margin-top: 0;
-  margin-right: 340px;
+  position: absolute;
+  left: 50px;
   font-weight: 400;
   font-size: 15px;
   line-height: 21.15px;
@@ -331,7 +346,8 @@ body {
 .comment-box {
   position: relative;
   width: 590px;
-  margin: 5px;
+  height: 100px;
+  margin: 8px;
 }
 /* userinfo-modal */
 #userinfo-modalContainer {
